@@ -22,6 +22,11 @@ WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+# Ensure public/ exists so the runner stage's COPY doesn't fail on
+# projects that don't ship a public/ directory yet. Next.js doesn't
+# require one — it's purely for static assets — so a missing public/
+# is legitimate. mkdir -p is idempotent: no-op if it already exists.
+RUN mkdir -p public
 RUN npm run build
 
 # ── Stage 3: runner ──────────────────────────────────────
