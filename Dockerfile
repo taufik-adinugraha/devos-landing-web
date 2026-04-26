@@ -7,7 +7,14 @@
 FROM node:20-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json* ./
-RUN --mount=type=cache,target=/root/.npm npm ci --include=dev
+# `npm ci` is strict + fast when the lockfile matches package.json.
+# Forge can edit package.json (adding deps for a feature) without
+# being allowed to regenerate package-lock.json (DONT_TOUCH rule),
+# so the lockfile drifts on feature branches. Fall back to `npm
+# install` so the build still completes — that's better than every
+# branch preview going red the moment Forge adds a dependency.
+RUN --mount=type=cache,target=/root/.npm \
+    (npm ci --include=dev || npm install --include=dev)
 
 # ── Stage 2: build ───────────────────────────────────────
 FROM node:20-alpine AS builder
