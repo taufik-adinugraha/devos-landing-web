@@ -53,6 +53,8 @@ Marketing landing page for DevOS. Explains the product in 30 seconds and capture
 - `sentry.*.config.ts` files — auto-loaded by `@sentry/nextjs`, do NOT import manually
 - `next.config.js` Sentry wrapper — required for source-map upload and tunnel route
 - `.github/workflows/ci.yml` — managed by DevOS, changes may break Watcher integration
+- `.github/workflows/preview.yml` — managed by DevOS, changes may break preview deployments
+- `.github/workflows/deploy.yml` — managed by DevOS, changes may break production deployments
 
 ## Local development
 1. `npm install`
@@ -63,4 +65,6 @@ Marketing landing page for DevOS. Explains the product in 30 seconds and capture
 ## Deployment notes
 - `NEXT_PUBLIC_SENTRY_DSN` must be set at **build time** (via Dockerfile ARG or Vercel env var)
 - Browser bundle inlines `NEXT_PUBLIC_*` vars during build — runtime env won't reach the client
+- Docker builds use Next.js standalone output mode (`output: 'standalone'` in next.config.js) for optimized multi-stage builds
 - If deploying via Docker, ensure `ARG NEXT_PUBLIC_SENTRY_DSN` and `ENV NEXT_PUBLIC_SENTRY_DSN=$NEXT_PUBLIC_SENTRY_DSN` are in the builder stage
+- `.dockerignore` excludes dev files (node_modules, .next, .git, etc.) to speed up builds
