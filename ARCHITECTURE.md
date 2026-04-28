@@ -24,12 +24,15 @@
 ├── sentry.server.config.ts     # Sentry init for SSR + route handlers
 ├── sentry.edge.config.ts       # Sentry init for middleware / edge runtime
 ├── instrumentation.ts          # Next.js instrumentation hook
-├── next.config.js              # Next.js config (wrapped with Sentry)
+├── next.config.js              # Next.js config (wrapped with Sentry, standalone output enabled)
 ├── tailwind.config.ts          # Tailwind configuration
 ├── tsconfig.json               # TypeScript configuration
+├── .dockerignore               # Excludes dev files from Docker build context
 └── .github/
     └── workflows/
-        └── ci.yml              # CI pipeline (lint + type-check + test)
+        ├── ci.yml              # CI pipeline (lint + type-check + test)
+        ├── deploy.yml          # Production deploy (main branch only)
+        └── preview.yml         # Per-branch preview deploys
 ```
 
 ## Request lifecycle
